@@ -1,11 +1,10 @@
 TOOLPATH = ../z_tools/
 INCPATH  = ../z_tools/haribote/
 
-MAKE     = $(TOOLPATH)make.exe -r
-EDIMG    = $(TOOLPATH)edimg.exe
-IMGTOL   = $(TOOLPATH)imgtol.com
-COPY     = copy
-DEL      = del
+MAKE     = $(TOOLPATH)make -r
+EDIMG    = $(TOOLPATH)edimg
+IMGTOL   = $(TOOLPATH)imgtol
+HARITOL  = $(TOOLPATH)haritol
 
 # デフォルト動作
 
@@ -72,8 +71,13 @@ haribote.img : haribote/ipl09.bin haribote/haribote.sys Makefile \
 
 run :
 	$(MAKE) haribote.img
-	$(COPY) haribote.img ..\z_tools\qemu\fdimage0.bin
+	$(HARITOL) concat ../z_tools/qemu/fdimage0.bin haribote.img
 	$(MAKE) -C ../z_tools/qemu
+
+brun :
+	$(MAKE) haribote.img
+	$(HARITOL) concat ../z_tools/bochs/fdimage0.bin haribote.img
+	$(MAKE) -C ../z_tools/bochs
 
 install :
 	$(MAKE) haribote.img
@@ -115,7 +119,7 @@ full :
 
 run_full :
 	$(MAKE) full
-	$(COPY) haribote.img ..\z_tools\qemu\fdimage0.bin
+	$(HARITOL) concat ../z_tools/qemu/fdimage0.bin haribote.img
 	$(MAKE) -C ../z_tools/qemu
 
 install_full :
@@ -131,8 +135,7 @@ clean :
 
 src_only :
 	$(MAKE) clean
-	-$(DEL) haribote.img
-
+	-$(HARITOL) remove haribote.img
 clean_full :
 	$(MAKE) -C haribote		clean
 	$(MAKE) -C apilib		clean
@@ -198,9 +201,9 @@ src_only_full :
 	$(MAKE) -C tview		src_only
 	$(MAKE) -C mmlplay		src_only
 	$(MAKE) -C gview		src_only
-	-$(DEL) haribote.img
+	-$(HARITOL) remove haribote.img
 
 refresh :
 	$(MAKE) full
 	$(MAKE) clean_full
-	-$(DEL) haribote.img
+	-$(HARITOL) remove haribote.img
