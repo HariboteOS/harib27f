@@ -66,7 +66,6 @@ haribote.sys : asmhead.bin bootpack.hrb Makefile
 # ƒRƒ}ƒ“ƒh
 
 clean :
-	echo $(CLEAN_FILES)
 	-$(HARITOL) remove asmhead.bin
 	-$(HARITOL) remove hankaku.bin
 	-$(HARITOL) remove $(CLEAN_FILES)
