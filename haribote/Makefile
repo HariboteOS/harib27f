@@ -5,20 +5,21 @@ OBJS_BOOTPACK = bootpack.obj naskfunc.obj hankaku.obj graphic.obj dsctbl.obj \
 TOOLPATH = ../../z_tools/
 INCPATH  = ../../z_tools/haribote/
 
-MAKE     = $(TOOLPATH)make.exe -r
-NASK     = $(TOOLPATH)nask.exe
-CC1      = $(TOOLPATH)cc1.exe -I$(INCPATH) -Os -Wall -quiet
-GAS2NASK = $(TOOLPATH)gas2nask.exe -a
-OBJ2BIM  = $(TOOLPATH)obj2bim.exe
-MAKEFONT = $(TOOLPATH)makefont.exe
-BIN2OBJ  = $(TOOLPATH)bin2obj.exe
-BIM2HRB  = $(TOOLPATH)bim2hrb.exe
+MAKE     = $(TOOLPATH)make -r
+NASK     = $(TOOLPATH)nask
+CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -Os -Wall -quiet
+GAS2NASK = $(TOOLPATH)gas2nask -a
+OBJ2BIM  = $(TOOLPATH)obj2bim
+MAKEFONT = $(TOOLPATH)makefont
+BIN2OBJ  = $(TOOLPATH)bin2obj
+BIM2HRB  = $(TOOLPATH)bim2hrb
 RULEFILE = ../haribote.rul
-EDIMG    = $(TOOLPATH)edimg.exe
-IMGTOL   = $(TOOLPATH)imgtol.com
-GOLIB    = $(TOOLPATH)golib00.exe 
-COPY     = copy
-DEL      = del
+EDIMG    = $(TOOLPATH)edimg
+IMGTOL   = $(TOOLPATH)imgtol
+GOLIB    = $(TOOLPATH)golib00 
+HARITOL  = $(TOOLPATH)haritol
+
+CLEAN_FILES	:= $(wildcard *.lst *.obj *.map *.bim *.hrb)
 
 # デフォルト動作
 
@@ -49,7 +50,7 @@ bootpack.hrb : bootpack.bim Makefile
 	$(BIM2HRB) bootpack.bim bootpack.hrb 0
 
 haribote.sys : asmhead.bin bootpack.hrb Makefile
-	copy /B asmhead.bin+bootpack.hrb haribote.sys
+	$(HARITOL) concat haribote.sys asmhead.bin bootpack.hrb
 
 # 一般規則
 
@@ -65,15 +66,12 @@ haribote.sys : asmhead.bin bootpack.hrb Makefile
 # コマンド
 
 clean :
-	-$(DEL) asmhead.bin
-	-$(DEL) hankaku.bin
-	-$(DEL) *.lst
-	-$(DEL) *.obj
-	-$(DEL) *.map
-	-$(DEL) *.bim
-	-$(DEL) *.hrb
+	echo $(CLEAN_FILES)
+	-$(HARITOL) remove asmhead.bin
+	-$(HARITOL) remove hankaku.bin
+	-$(HARITOL) remove $(CLEAN_FILES)
 
 src_only :
 	$(MAKE) clean
-	-$(DEL) ipl09.bin
-	-$(DEL) haribote.sys
+	-$(HARITOL) remove ipl09.bin
+	-$(HARITOL) remove haribote.sys
