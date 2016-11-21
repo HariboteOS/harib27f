@@ -20,8 +20,11 @@ RULEFILE = ../haribote.rul
 EDIMG    = $(TOOLPATH)edimg
 IMGTOL   = $(TOOLPATH)imgtol.com
 GOLIB    = $(TOOLPATH)golib00 
-COPY     = copy
-DEL      = del
+HARITOL  = $(TOOLPATH)haritol
+COPY     = $(HARITOL) copy
+DEL      = $(HARITOL) remove
+
+CLEAN_FILES := $(wildcard *.lst *.map *.bim *.org)
 
 # デフォルト動作
 
@@ -77,12 +80,9 @@ run_full :
 	$(MAKE) run
 
 clean :
-	-$(DEL) *.lst
+	-$(DEL) $(CLEAN_FILES)
 	-$(DEL) gview.obj
 	-$(DEL) jpeg.obj
-	-$(DEL) *.map
-	-$(DEL) *.bim
-	-$(DEL) *.org
 	-$(DEL) haribote.img
 
 src_only :
