@@ -142,6 +142,7 @@ clean :
 src_only :
 	$(MAKE) clean
 	-$(HARITOL) remove haribote.img
+
 clean_full :
 	$(MAKE) -C haribote		clean
 	$(MAKE) -C apilib		clean

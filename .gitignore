@@ -2,3 +2,9 @@
 *.bin
 *.img
 *.iso
+*.bim
+*.lst
+*.map
+*.obj
+*.org
+*.hrb

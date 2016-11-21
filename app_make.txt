@@ -3,28 +3,31 @@ INCPATH  = ../../z_tools/haribote/
 APILIBPATH   = ../apilib/
 HARIBOTEPATH = ../haribote/
 
-MAKE     = $(TOOLPATH)make.exe -r
-NASK     = $(TOOLPATH)nask.exe
-CC1      = $(TOOLPATH)cc1.exe -I$(INCPATH) -I../ -Os -Wall -quiet
-GAS2NASK = $(TOOLPATH)gas2nask.exe -a
-OBJ2BIM  = $(TOOLPATH)obj2bim.exe
-MAKEFONT = $(TOOLPATH)makefont.exe
-BIN2OBJ  = $(TOOLPATH)bin2obj.exe
-BIM2HRB  = $(TOOLPATH)bim2hrb.exe
-BIM2BIN  = $(TOOLPATH)bim2bin.exe
+MAKE     = $(TOOLPATH)make -r
+NASK     = $(TOOLPATH)nask
+CC1      = $(TOOLPATH)gocc1 -I$(INCPATH) -I../ -Os -Wall -quiet
+GAS2NASK = $(TOOLPATH)gas2nask -a
+OBJ2BIM  = $(TOOLPATH)obj2bim
+MAKEFONT = $(TOOLPATH)makefont
+BIN2OBJ  = $(TOOLPATH)bin2obj
+BIM2HRB  = $(TOOLPATH)bim2hrb
+BIM2BIN  = $(TOOLPATH)bim2bin
 RULEFILE = ../haribote.rul
-EDIMG    = $(TOOLPATH)edimg.exe
+EDIMG    = $(TOOLPATH)edimg
 IMGTOL   = $(TOOLPATH)imgtol.com
-GOLIB    = $(TOOLPATH)golib00.exe 
-COPY     = copy
-DEL      = del
+GOLIB    = $(TOOLPATH)golib00 
+HARITOL  = $(TOOLPATH)haritol
+COPY     = $(HARITOL) copy
+DEL      = $(HARITOL) remove
 
-# ÉfÉtÉHÉãÉgìÆçÏ
+CLEAN_FILES	:= $(wildcard *.lst *.obj *.map *.bim *.org)
+
+# „Éá„Éï„Ç©„É´„ÉàÂãï‰Ωú
 
 default :
 	$(MAKE) $(APP).hrb
 
-# ÉtÉ@ÉCÉãê∂ê¨ãKë•
+# „Éï„Ç°„Ç§„É´ÁîüÊàêË¶èÂâá
 
 $(APP).bim : $(APP).obj $(APILIBPATH)apilib.lib Makefile ../app_make.txt
 	$(OBJ2BIM) @$(RULEFILE) out:$(APP).bim map:$(APP).map stack:$(STACK) \
@@ -39,7 +42,7 @@ haribote.img : ../haribote/ipl09.bin ../haribote/haribote.sys $(APP).hrb \
 		copy from:../nihongo/nihongo.fnt to:@: \
 		imgout:haribote.img
 
-# àÍî ãKë•
+# ‰∏ÄËà¨Ë¶èÂâá
 
 %.gas : %.c ../apilib.h Makefile ../app_make.txt
 	$(CC1) -o $*.gas $*.c
@@ -56,11 +59,11 @@ haribote.img : ../haribote/ipl09.bin ../haribote/haribote.sys $(APP).hrb \
 %.hrb : %.org Makefile ../app_make.txt
 	$(BIM2BIN) -osacmp in:$*.org out:$*.hrb
 
-# ÉRÉ}ÉìÉh
+# „Ç≥„Éû„É≥„Éâ
 
 run :
 	$(MAKE) haribote.img
-	$(COPY) haribote.img ..\..\z_tools\qemu\fdimage0.bin
+	$(HARITOL) concat ..\..\z_tools\qemu\fdimage0.bin haribote.img
 	$(MAKE) -C ../../z_tools/qemu
 
 full :
@@ -73,11 +76,7 @@ run_full :
 	$(MAKE) run
 
 clean :
-	-$(DEL) *.lst
-	-$(DEL) *.obj
-	-$(DEL) *.map
-	-$(DEL) *.bim
-	-$(DEL) *.org
+	-$(HARITOL) remove $(CLEAN_FILES)
 	-$(DEL) haribote.img
 
 src_only :
