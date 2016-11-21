@@ -209,6 +209,7 @@ src_only_full :
 	$(MAKE) -C mmlplay		src_only
 	$(MAKE) -C gview		src_only
 	-$(HARITOL) remove haribote.img
+	-$(HARITOL) remove haribote.iso
 
 refresh :
 	$(MAKE) full
