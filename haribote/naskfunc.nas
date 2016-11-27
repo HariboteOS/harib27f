@@ -1,7 +1,7 @@
 ; naskfunc
 ; TAB=4
 
-[FORMAT "WCOFF"]				; オブジェクトファイルを作るモード	
+[FORMAT "WCOFF"]				; オブジェクトファイルを作るモード
 [INSTRSET "i486p"]				; 486の命令まで使いたいという記述
 [BITS 32]						; 32ビットモード用の機械語を作らせる
 [FILE "naskfunc.nas"]			; ソースファイル名情報
@@ -14,12 +14,14 @@
 		GLOBAL	_load_cr0, _store_cr0
 		GLOBAL	_load_tr
 		GLOBAL	_asm_inthandler20, _asm_inthandler21
+		GLOBAL  _asm_inthandler27
 		GLOBAL	_asm_inthandler2c, _asm_inthandler0c
 		GLOBAL	_asm_inthandler0d, _asm_end_app
 		GLOBAL	_memtest_sub
 		GLOBAL	_farjmp, _farcall
 		GLOBAL	_asm_hrb_api, _start_app
 		EXTERN	_inthandler20, _inthandler21
+		EXTERN  _inthandler27
 		EXTERN	_inthandler2c, _inthandler0d
 		EXTERN	_inthandler0c
 		EXTERN	_hrb_api
@@ -144,6 +146,22 @@ _asm_inthandler21:
 		POPAD
 		POP		DS
 		POP		ES
+		IRETD
+
+_asm_inthandler27:
+		PUSH    ES
+		PUSH    DS
+		PUSHAD
+		MOV     EAX,ESP
+		PUSH    EAX
+		MOV     AX,SS
+		MOV     DS,AX
+		MOV     ES,AX
+		CALL    _inthandler27
+		POP     EAX
+		POPAD
+		POP     DS
+		POP     ES
 		IRETD
 
 _asm_inthandler2c:
