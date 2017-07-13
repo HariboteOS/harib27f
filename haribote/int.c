@@ -24,3 +24,10 @@ void init_pic(void)
 
 	return;
 }
+
+void inthandler27(int *esp)
+{
+    /* PIC0からの不完全割り込み対策 */
+    io_out8(PIC0_OCW2, 0x67); /* IRQ-07受付完了をPICに通知 */
+    return;
+}

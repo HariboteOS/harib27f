@@ -94,10 +94,13 @@ keystatus:
 ;	こいつをCLI前にやっておかないと、たまにハングアップする
 ;	PICの初期化はあとでやる
 
+		CLI
 		MOV		AL,0xff
 		OUT		0x21,AL
 		NOP						; OUT命令を連続させるとうまくいかない機種があるらしいので
 		OUT		0xa1,AL
+		STI
+		NOP
 
 		CLI						; さらにCPUレベルでも割り込み禁止
 
@@ -174,7 +177,7 @@ skip:
 waitkbdout:
 		IN		 AL,0x64
 		AND		 AL,0x02
-		IN		 AL,0x60 		; から読み(受信バッファが悪さをしないように)
+;		IN		 AL,0x60 		; から読み(受信バッファが悪さをしないように)
 		JNZ		waitkbdout		; ANDの結果が0でなければwaitkbdoutへ
 		RET
 
